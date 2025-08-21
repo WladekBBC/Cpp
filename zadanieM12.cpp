@@ -67,4 +67,4 @@ int main(){
     cout<<u1-u2<<endl;
     cout<<u1/u2<<endl;
 
-}
+};
