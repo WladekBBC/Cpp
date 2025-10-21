@@ -1,5 +1,5 @@
 import numpy as np
-
+import math
 # 3 - start
 # 5 - cel
 # 1 - przeszkoda
@@ -22,11 +22,15 @@ for r in range(mapa.shape[0]):
             przeszkody.append((r,c))
 
 # funkcje g, h, f
+# def h_funkcja(x_cel, y_cel, x_n, y_n):
+#     return abs(x_cel - x_n) + abs(y_cel - y_n)
+
+# h((pozx, pozy )) = (pozx−celx)^2 + (pozy−cely )^2
 def h_funkcja(x_cel, y_cel, x_n, y_n):
-    return abs(x_cel - x_n) + abs(y_cel - y_n)
+    return math.sqrt((x_n - x_cel)**2 + (y_n - y_cel)**2)
 
 def g_funkcja(g_current):
-    return g_current + 1  # koszt ruchu = 1
+    return g_current + 1  
 
 def f_funkcja(g,h):
     return g + h
