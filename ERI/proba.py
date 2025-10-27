@@ -1,20 +1,14 @@
 import numpy as np
 import math
-# 3 - start
-# 5 - cel
+import time 
+
 # 1 - przeszkoda
 # 0 - wolne pole
 # * - odwiedzane pole
-mapa = np.array([
-    [0, 0, 0, 0, 0],
-    [0, 1, 0, 0, 0],
-    [0, 0, 1, 0, 0],
-    [0, 0, 0, 1, 0], 
-    [0, 0, 0, 0, 1]
-])
+mapa = np.zeros((17,17), dtype=int)
 
-start = (3,2)
-finish = (3,4)
+start = (0,0)
+finish = (16,16)
 przeszkody = []
 for r in range(mapa.shape[0]):
     for c in range(mapa.shape[1]):
@@ -22,10 +16,6 @@ for r in range(mapa.shape[0]):
             przeszkody.append((r,c))
 
 # funkcje g, h, f
-# def h_funkcja(x_cel, y_cel, x_n, y_n):
-#     return abs(x_cel - x_n) + abs(y_cel - y_n)
-
-# h((pozx, pozy )) = (pozx−celx)^2 + (pozy−cely )^2
 def h_funkcja(x_cel, y_cel, x_n, y_n):
     return math.sqrt((x_n - x_cel)**2 + (y_n - y_cel)**2)
 
@@ -46,27 +36,54 @@ fg_dict = {start: {'g':0, 'h':h_funkcja(*finish, *start), 'f':h_funkcja(*finish,
 moves = [(-1,0),(1,0),(0,-1),(0,1)]
 
 while open_list:
+    # --- POCZĄTEK BLOKU WIZUALIZACJI W KAŻDYM KROKU ---
+    mapa_path = np.copy(mapa).astype(str)
+    # Zastąp '0' kropkami dla lepszej czytelności
+    mapa_path[mapa_path == '0'] = '.'
+
+    # Oznacz wszystkie odwiedzone węzły (closed_list)
+    for node in closed_list:
+        mapa_path[node[0], node[1]] = '*'
+        
+    # Oznacz wszystkie węzły na liście otwartej (open_list)
+    for node in open_list:
+        mapa_path[node[0], node[1]] = '#'
+
+    # Wybierz najlepszy węzeł, ale jeszcze go nie usuwaj z open_list
     current = min(open_list, key=lambda x: fg_dict[x]['f'])
-    print("Current:", current, "f =", fg_dict[current]['f'])
     
+    # Oznacz aktualnie przetwarzany węzeł
+    mapa_path[current[0], current[1]] = '@'
+    mapa_path[start[0], start[1]] = 'S'
+    mapa_path[finish[0], finish[1]] = 'F'
+    
+    # Wydrukuj mapę w obecnym stanie
+    print("\n---------------------------------")
+    print(f"Aktualny węzeł: {current}, f = {fg_dict[current]['f']:.2f}")
+    print("Mapa stanu:")
+    print(mapa_path)
+    time.sleep(0.05) # Pauza, aby można było zaobserwować zmiany
+    
+
     if current == finish:
-        print("Cel osiągnięty!")
+        print("\nCel osiągnięty!")
         path = []
         while current:
             path.append(current)
             current = fg_dict[current]['parent']
         path.reverse()
-        print("Ścieżka:", path)
+        print("Odnaleziona ścieżka:", path)
         
-        # Wizualizacja ścieżki
-        mapa_path = np.copy(mapa).astype(str)
+        # Wizualizacja ostatecznej ścieżki
+        final_map = np.copy(mapa).astype(str)
+        final_map[final_map == '0'] = '.'
         for r, c in path:
             if (r,c) != start and (r,c) != finish:
-                mapa_path[r,c] = '*'
-        mapa_path[start[0], start[1]] = 'S' # Start
-        mapa_path[finish[0], finish[1]] = 'F' # Finish
-        print("\nMapa ze ścieżką:")
-        print(mapa_path)
+                final_map[r,c] = '+' # Użyj '+' do oznaczenia ścieżki
+        final_map[start[0], start[1]] = 'S' # Start
+        final_map[finish[0], finish[1]] = 'F' # Finish
+        print("\nMapa z ostateczną ścieżką:")
+        print(final_map)
         
         break
 
@@ -76,12 +93,9 @@ while open_list:
     for move in moves:
         neighbor = (current[0]+move[0], current[1]+move[1])
         
-        # Sprawdzenie czy sąsiad jest poza granicami mapy
-        if neighbor[0]<0 or neighbor[0]>=mapa.shape[0] or \
-           neighbor[1]<0 or neighbor[1]>=mapa.shape[1]:
+        if not (0 <= neighbor[0] < mapa.shape[0] and 0 <= neighbor[1] < mapa.shape[1]):
             continue
 
-        # Sprawdzenie czy sąsiad jest przeszkodą LUB jest już na closed_list
         if neighbor in przeszkody or neighbor in closed_list:
             continue
         
@@ -89,13 +103,10 @@ while open_list:
         h = h_funkcja(*finish, *neighbor)
         f = f_funkcja(g,h)
 
-        if neighbor not in open_list:
-            open_list.append(neighbor)
-            fg_dict[neighbor] = {'g':g, 'h':h, 'f':f, 'parent': current}
-        elif g < fg_dict[neighbor]['g']:
-            fg_dict[neighbor]['g'] = g
-            fg_dict[neighbor]['f'] = f
-            fg_dict[neighbor]['parent'] = current
-
-else: # Wykonuje się, jeśli pętla while zakończy się bez break (brak ścieżki)
+        if neighbor not in open_list or g < fg_dict[neighbor]['g']:
+            fg_dict[neighbor] = {'g': g, 'h': h, 'f': f, 'parent': current}
+            if neighbor not in open_list:
+                open_list.append(neighbor)
+        
+else: 
     print("Nie znaleziono ścieżki do celu.")
