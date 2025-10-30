@@ -9,7 +9,6 @@
 
 using namespace std;
 
-// Struktura Point i funkcja heuristic bez zmian
 struct Point {
     int x, y;
 };
@@ -48,7 +47,7 @@ vector<vector<int>> loadMapFromFile(const string& filename, int& width, int& hei
 // ===================================================================
 // NOWA FUNKCJA: Cała logika A* jest teraz tutaj
 // ===================================================================
-vector<Point> findPath(const vector<vector<int>>& map, Point start, Point goal) {
+vector<Point> aStar(const vector<vector<int>>& map, Point start, Point goal) {
     
     // Sprawdzenie, czy mapa nie jest pusta
     if (map.empty() || map[0].empty()) {
@@ -90,13 +89,13 @@ vector<Point> findPath(const vector<vector<int>>& map, Point start, Point goal) 
 
         closed[current.y][current.x] = true;
 
-        // KROK 4: PRZEGLĄDANIE SĄSIADÓW
         int dx[4] = {1, -1, 0, 0};
         int dy[4] = {0, 0, 1, -1};
+
         for (int i = 0; i < 4; i++) {
             Point nb = { current.x + dx[i], current.y + dy[i] };
             if (nb.x < 0 || nb.x >= width || nb.y < 0 || nb.y >= height) continue;
-            if (map[nb.y][nb.x] == 1) continue; // Uwaga: w Twoim kodzie było `map[y][x] == 5`, poprawiłem na 1.
+            if (map[nb.y][nb.x] == 5) continue;
             if (closed[nb.y][nb.x]) continue;
 
             float new_g = g[current.y][current.x] + 1;
@@ -108,7 +107,7 @@ vector<Point> findPath(const vector<vector<int>>& map, Point start, Point goal) 
         }
     }
 
-    // KROK 5: ODTWORZENIE ŚCIEŻKI
+    
     vector<Point> path;
     if (path_found) {
         Point p = goal;
@@ -125,7 +124,6 @@ vector<Point> findPath(const vector<vector<int>>& map, Point start, Point goal) 
 
 
 int main() {
-    // --- KROK 1: WCZYTANIE I PRZYGOTOWANIE DANYCH ---
     int width, height;
     string filename = "/Users/vladberezhnyi/Cpp/ERI/grid.txt";
     vector<vector<int>> map = loadMapFromFile(filename, width, height);
@@ -140,7 +138,7 @@ int main() {
 
     // --- KROK 2: WYWOŁANIE FUNKCJI A* ---
     cout << "Szukanie sciezki...\n";
-    vector<Point> path = findPath(map, start, goal);
+    vector<Point> path = aStar(map, start, goal);
 
     // --- KROK 3: WYŚWIETLENIE WYNIKU ---
     if (path.empty()) {
@@ -156,7 +154,7 @@ int main() {
 
                 if (x == start.x && y == start.y) cout << "S ";
                 else if (x == goal.x && y == goal.y) cout << "F ";
-                else if (map[y][x] == 1) cout << "X ";
+                else if (map[y][x] == 5) cout << "X ";
                 else if (onPath) cout << "* ";
                 else cout << ". ";
             }
@@ -164,5 +162,8 @@ int main() {
         }
     }
     
+    for(int i = 0; i<path.size(); i++){
+        cout<<"("<<path[i].x<<","<<path[i].y<<") ";
+    }
     return 0;
 }
