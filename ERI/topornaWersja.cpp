@@ -17,7 +17,6 @@ float heuristic(Point a, Point b) {
     return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
 }
 
-// Funkcja wczytująca mapę z pliku bez zmian
 vector<vector<int>> loadMapFromFile(const string& filename, int& width, int& height) {
     vector<vector<int>> map;
     ifstream file(filename);
@@ -44,12 +43,8 @@ vector<vector<int>> loadMapFromFile(const string& filename, int& width, int& hei
     return map;
 }
 
-// ===================================================================
-// NOWA FUNKCJA: Cała logika A* jest teraz tutaj
-// ===================================================================
 vector<Point> aStar(const vector<vector<int>>& map, Point start, Point goal) {
     
-    // Sprawdzenie, czy mapa nie jest pusta
     if (map.empty() || map[0].empty()) {
         return {}; // Zwróć pustą ścieżkę
     }
@@ -57,7 +52,6 @@ vector<Point> aStar(const vector<vector<int>>& map, Point start, Point goal) {
     int height = map.size();
     int width = map[0].size();
 
-    // KROK 2: PRZYGOTOWANIE "NOTESÓW" ALGORYTMU
     vector<vector<float>> g(height, vector<float>(width, INFINITY));
     vector<vector<Point>> parent(height, vector<Point>(width, {-1, -1}));
     vector<vector<bool>> closed(height, vector<bool>(width, false));
@@ -66,7 +60,6 @@ vector<Point> aStar(const vector<vector<int>>& map, Point start, Point goal) {
     vector<Point> open;
     open.push_back(start);
 
-    // KROK 3: GŁÓWNA PĘTLA ALGORYTMU
     bool path_found = false;
     while (!open.empty()) {
         int best_i = 0;
@@ -107,7 +100,6 @@ vector<Point> aStar(const vector<vector<int>>& map, Point start, Point goal) {
         }
     }
 
-    
     vector<Point> path;
     if (path_found) {
         Point p = goal;

@@ -15,7 +15,6 @@ for r in range(mapa.shape[0]):
         if mapa[r,c] == 1:
             przeszkody.append((r,c))
 
-# funkcje g, h, f
 def h_funkcja(x_cel, y_cel, x_n, y_n):
     return math.sqrt((x_n - x_cel)**2 + (y_n - y_cel)**2)
 
@@ -25,7 +24,7 @@ def g_funkcja(g_current):
 def f_funkcja(g,h):
     return g + h
 
-# OPEN i CLOSED
+
 open_list = [start]
 closed_list = []
 
