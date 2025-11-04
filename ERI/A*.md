@@ -1,3 +1,8 @@
+# A*
+
+A star kod którego trzeba się nauczyć
+
+```c++
 #include <iostream>
 #include <vector>
 #include <cmath>
@@ -33,7 +38,6 @@ vector<vector<int>> loadMapFromFile(const string& filename, int& width, int& hei
         while (ss >> cell_value) { row.push_back(cell_value); }
         if (!row.empty()) { map.push_back(row); }
     }
-    
     file.close();
     if (!map.empty()) {
         height = map.size();
@@ -128,7 +132,8 @@ int main() {
     }
     
     Point start = {0, 0};
-    Point goal  = {19, 5};
+    Point goal  = {16, 18};
+ 
     cout << "Szukanie sciezki...\n";
     vector<Point> path = aStar(map, start, goal);
 
@@ -158,3 +163,4 @@ int main() {
     }
     return 0;
 }
+```
