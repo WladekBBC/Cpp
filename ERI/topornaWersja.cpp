@@ -123,7 +123,7 @@ int main() {
     vector<vector<int>> map = loadMapFromFile(filename, width, height);
 
     if (width == 0 || height == 0) {
-        cout << "Mapa nie zostala wczytana. Konczenie programu." << endl;
+        cout << "Mapa nie zostala wczytana" << endl;
         return 1;
     }
     
@@ -133,7 +133,7 @@ int main() {
     vector<Point> path = aStar(map, start, goal);
 
     if (path.empty()) {
-        cout << "Nie znaleziono sciezki!\n";
+        cout << "Nie znaleziono sciezki\n";
     } else {
         cout << "Sciezka znaleziona!\n";
         cout << "\nMapa:\n";
