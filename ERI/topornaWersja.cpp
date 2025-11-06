@@ -15,7 +15,7 @@ struct Point {
 
 float heuristic(Point a, Point b) {
     return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
-}
+};
 
 vector<vector<int>> loadMapFromFile(const string& filename, int& width, int& height) {
     vector<vector<int>> map;
@@ -83,7 +83,6 @@ vector<Point> aStar(const vector<vector<int>>& map, Point start, Point goal) {
 
         closed[current.y][current.x] = true;
 
-        //kroki lewo prawo gora dol
         int dx[4] = {1, -1, 0, 0};
         int dy[4] = {0, 0, 1, -1};
 
@@ -127,17 +126,17 @@ int main() {
         return 1;
     }
     
-    Point start = {0, 0};
-    Point goal  = {19, 5};
+    Point start = {2, 2};
+    Point goal  = {18, 18};
     cout << "Szukanie sciezki...\n";
     vector<Point> path = aStar(map, start, goal);
 
     if (path.empty()) {
         cout << "Nie znaleziono sciezki\n";
     } else {
-        cout << "Sciezka znaleziona!\n";
+        cout << "Sciezka znaleziona\n";
         cout << "\nMapa:\n";
-        for (int y = 0; y < height; y++) {
+        for (int y = height - 1; y >= 0; y--) {
             for (int x = 0; x < width; x++) {
                 bool onPath = false;
                 for (auto pt : path)
