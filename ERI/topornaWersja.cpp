@@ -21,7 +21,7 @@ vector<vector<int>> loadMapFromFile(const string& filename, int& width, int& hei
     vector<vector<int>> map;
     ifstream file(filename);
     if (!file.is_open()) {
-        cerr << "Blad: Nie mozna otworzyc pliku: " << filename << endl;
+        cerr << "Nie mozna otworzyc pliku: " << filename << endl;
         width = 0; height = 0;
         return map;
     }
@@ -128,7 +128,7 @@ int main() {
     
     Point start = {2, 2};
     Point goal  = {18, 18};
-    cout << "Szukanie sciezki...\n";
+    cout << "Szukanie sciezki\n";
     vector<Point> path = aStar(map, start, goal);
 
     if (path.empty()) {
